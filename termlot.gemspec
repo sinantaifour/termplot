@@ -12,4 +12,6 @@ Gem::Specification.new do |s|
   s.description = "Make plots in the terminal."
   s.files       = Dir[DIR + '/lib/**/*.rb']
   s.license     = 'MIT'
+
+  s.add_development_dependency 'rake', '~> 12.0'
 end

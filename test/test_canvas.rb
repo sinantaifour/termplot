@@ -50,12 +50,6 @@ class CanvasTest < Minitest::Test
       fN0MLHa+NxHc0fif3Igsg0G1qX9FjaM1cNLJUC/1ElXtHG3ToEo5i6G2viRK
       YgC/0X1YO05TY9vS13bkQyD3B4jTHgs=
     EOS
-    :density => <<~EOS,
-      eJxTUMAE0tHGRrmPpnVIRxvkYpGmABAymYsIDdR3HYmWYDiSXgDFYjwupF4I
-      kWHJ4AidAbGYiHCnPGrItGTgQ2dkWUxCRJOfJiiwZIRGy6C2mD71LtfAVe/Y
-      wOCPlpFpMfFxSW56GhrhMDItJhynlJQiQyccBtRi3EFMaRE+tMIBBDB9TI1q
-      jKJwoFI9ygUAxONGcA==
-    EOS
   }
 
   REFS.keys.each do |type|

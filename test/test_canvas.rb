@@ -14,53 +14,44 @@ class CanvasTest < Minitest::Test
 
   REFS = {
     :ascii => <<~EOS,
-      eJydl0GOwyAMRfecAmUzErKUeyQ9QkRyhVl35u5N0hKI+dimllpVH+yHKXbI
-      EONKPts6xmFgmtFojYfvvCraae742uaEoSENZM2KHbf0cyBBK8EJk7Hd6AJx
-      YZDGwd4H8iOPFsxkClxZoAbAfnrW8azkmuH9/0OMd4EpEKAgzTaLCK06awlM
-      2/5Z6plIs3H3QwL0S/uAP3uFKCq5vVPSHrqSCynabkvRhTF344pR+rnSqPP3
-      M9lL/gVjpTaB8VM7wI9KZdauKlRHdw35Tm8w6xtyFTADtcrX8gPclgNc9asJ
-      zETevloznopLxYE/EM5EOSMu0GCpOBRwAxrIeQS+aC0wEwc0YyMx5nsYWCEG
-      Q/IfC4YKD0dDcxtgvZz7Cp6q498Aq3HrSLiZJKsKsgWG5Nxc9MahkZtgmFPy
-      7udW5DZYaGHfcHk8AdwkE6hpncseAxK4ccJgvqYrUpmJCPY0A83YwxSyDAad
-      ZM/N1MOw5Z3RwOwa/r46Mu32GqCRU9IquMTkG2uh9WCLIAbwjgnxfPkiplEM
-      vdgTvb8UknsB2tPiOw==
-    EOS
-    :braille => <<~EOS,
-      eJzNmkFuwyAQRfc5NVWrNsmikqsuUqmqwM6iy2aX83CSGmxHWDEwMx/sSLNI
-      pHwzfszAd7DVB6s/rG5t+2KNsjoZrbJd/+HsJUfL0m4Vfc5GW/3pU+0TbvyH
-      s7+Rmtp57Obf945aDJkb8jl+raR2K8SO0VP8N40rkeJaAugJWTtH5hAfaVds
-      HqK685jiyBAtE/QQJ2v8JcwfedRgeMOY7QqUv/nCztWH074LtVLQypV29yO9
-      4ROrs4pSFpAatBdriI17H5c06zjoMWO/jAjH7rWv61LWyV0kGWbQnoBeTGkj
-      oF3Gwdy2b8DNA1oeKcESd9OGi3IV1kugF+qir81OOjaiXYfydSlncS9+LbK+
-      A53oPoRX1bqGKMe0e2vErBfqeg46u8ZBdV1nva5COcpLzDoA7XY/Qt3Ja7MC
-      6xagTNIirK+hDwlAG6IrKtxTAGVFqoxlrSb7k4xvI2on0Ibl8Gt5ICZlsV9m
-      zlDvr+V5dgHohW03G9ci8ywPXmXAMwQZgc6Dlm8mAK8WYy2mDM0QZAR28s0E
-      Zy0nJbYZwAxpyKSm/+ugjI32FJNU2QcTbsiNEwwaZc3alOpZZnoIN/MSoCGD
-      TNYifxgh2kKsi4BW1c31SpaZHuzNqRRoGi+ZFrXMUm1R1gVBg6wjeT8o5eH6
-      jM2pLOjSrB+ZMpN1cdADL4T1pIUo6wrrcizyB4aVQCvMh/jDRpSy+OhPFvnD
-      6EqgFXTY2P7Kn8GMXrGWw8gcRtcDPQSpreakpieLlZ8bC0Sqj2uDVow3eoz2
-      LR+SIluoUbsV4oB15HWtFUCnhh8jtSLntI+COJPzOqBvwx/GlwT7Gh9flvy8
-      q2KC1sE9Ty8ebo41kXPjiPepGrX7BwL3WAE=
-    EOS
-    :density => <<~EOS,
-      eJytl1EOwjAMQ/9zih1333xwwJ0EaVJX2sSJHUAIQeK4j6zbsuv9uu73sb6u
-      EQ+z5Cs3KZewITq/02uBz6tswS8mPxGf9P7V5SS0OMDY28ydz+e2gEQTRkpb
-      +06Ag6Q0B2h58wUINIGkwcW1bXl4aA5UStnaFmr3Iy+sbG0PNDmqsiJvTtTi
-      qItyhXlJdpDbFIWtBSZ6P6iKTBRhxAUJBsmdyAxfBGkOWo6FFuagXgEEPQ12
-      yA3yhzWRGOzr2NiCGBJLreZtFQRp0/G+AOH304/3RQiMvbgTGhA1Re+eA8fB
-      BkP37usUCUJxYqgXVqjJEOBVZQyVTQZnnEKo8xs7o666HEGeZ5VZeRcXKPEN
-      7oziPMKmLhH8H7zwc4/UDF9Swwz9CrBNcjPi0xrWHHiUknDJEe88FS8Wh30A
-      AOqdGg==
+      eJytl1kOgyAQht85heGliZnEe6hHaNAr9P4vdakL8M8CdpJWA8P/MSwj+BAm
+      ai6j26/QaArB+zBMFjm3/s1DBSbDdvPx6g1ybn/s6NS/oDs37IkW5dzx0j4K
+      mtq05K20OMGPyDlX1bvADVWTcUuZfIIXL0LDY+gN4q5FM1MegzfTJsbM1WpS
+      cA1ZUhfqEnD5PMst+NoNPCqeIyj72Ueax8V6rt6lpciTN7SPYuPWdgYu28/C
+      WBz2soKb3s7tLE54wQIw9kTjYOJiPXJIcLYJdsrCEskoYuN2NsbLdAeDLeSS
+      LQ98GbCuWpZqKFv+DFhNJLmS/D3JNikH1lKhmjg0MguGMdVzMzIPFlJYDTfV
+      E8CYvB4YQBa0LLXoMyCBmXmui3e1eyQiuKHhn9yILINBJqk/EsatNXByK6AW
+      nNRLukJH0Cr4jqZnp/5IxABe0G3YLmTgclfTE/IhkPsCkaLU9w==
     EOS
     :dot => <<~EOS,
-      eJydl0sSwzAIQ/ecIjvvfIDc/2B12jT+CSHiRSbVgF6NDdOWUms9+mqfSlk0
-      caFU186+z/LotfzfShaNUn07m/Qel0ajVGZngzzHtXW+xDp2E9m6DDDqnjfG
-      lYo0BD4RRSMDRqsW34j1QFhaVIedgTW6kxt8f2fPgnPRfstEAXY2cl+RWQoh
-      28R9QeYJPtnW5CQ5CnfJtiWnyOg+z5pnZ3typp9BrGB3aRYMGE6WqoODLBgw
-      lCyeCiyhgUNSybCBgR0UDWi885+FB6Vqh8FKEeMLTckOOCZnuIjsgSNyFRqJ
-      2rlgfsFy+0VkF0zJee5G9sH4aldkonDXJAJ2h2f2fKEdBeNq6/3LoigYD0Bl
-      uMR2AXjHnLumlPlevYYReKl3Bb+lEtwhNwaPBXreeEcraAV8/P52teeqzZJM
-      bqmHfQDHktUF
+      eJyll0sCwyAIRPeewh07D5D7H6yJbRrFAQfiIrUG5slg+hFprdVnXHP5vQbH
+      KSTCypV+lQRm5co9Y+RKIJbEcnI3uIeKuqnfs1hGrkyh2bFw93IP+AUZcM9x
+      cGAxQgm7rTRUyV+uTMv+Ji2uuTfPwxmcIXspDlmB42Q/wSZ38OhVsM+7cLPP
+      uuJgzfg8M3IrOEQmYo0QAA48z9QecRAAYzJaI71BYa2gJpE1oweY/gxDFZPk
+      /cHy5DCYMZHnQrIB3pMjXES2wPhEDFNw3+vPEm6C/TbH6kVkE+yS49yFbIM9
+      cu7rkwWbfY72F8q5YFxzxueV7IJhzSmb19wNuB666CtXrQV+JD4e7sDK77zN
+      Wm4PHg16Y7NCM+D6/St2Xse12j3OOHDJ1fIBpn/Ndg==
+    EOS
+    :braille => <<~EOS,
+      eJzVmsFuwyAMhu95atpNW9rD1Ew99LADkD7Aetvz8CSDkG5jSwjGNjDpV9Wm
+      ccBfjDEJRh6MfDVSG/1olDByS8E5u5XjLUnbvkkjz5Ob1tlh+nI1Y5rt989+
+      5XiSuvB374g3iywDseO7Wz9ncOFVpDPd0tHe6BA3FH31W7WNeB03NFrTzl8E
+      7XUxqtDdZqD8BjccWeMjAlpMof1UHxyY8kuu+Y2PdRy0mNNIdXyplKWRD7iL
+      cI3jCOj9DweeEW3sEbYQqffkpPxXJyLWp7W/NiPay8b1WIhXBcqL/hLnzETQ
+      k5plTUz5zlpRsoaAbpM1C2Uvynz9C3RCPm0qX2uqvMzBOrg+MKKdiMcUgrL9
+      xNz1RNHUfBmgRRNrGVS9DG3rVgu01UfldbbKWPthWGMnp2zQAjumULZlKeNZ
+      awcaM2UzrlmjlLP73Ocael75UwImon3bZQs+xmIuRfkLGTTokqxRxRyVMgsB
+      CtBlHvIRPDCqyZoEtEAX11v9RpXMkoE1eHKiAi0Yi+uSJTMba0LQPKwbpez7
+      BpicaEFTs26ZMpA1OWgxjSkM67stirIsiDvpZSMHaEFQh7Qfy4GGzdhiAi1Q
+      LxsbquTSdYlvEeED7QV/h1957YdRbBxzgxaA3UBKGnkMKYOI455jULFe2epV
+      AHSs+Vn/LCPn+FsG9Ffzh3mDoY1xt8fwOm3cOqZF7uKGyhaiOOLv4IhbN5Xo
+      PgGWvkwL
+    EOS
+    :density => <<~EOS,
+      eJxTUMAEj6Z1YBGlAOAwkAu3Oqo5Aa+RGA6gF0CxGNNhFPueoJGDw+cDYjHu
+      wCU72IkycuB9PrIsJhybJMc30UaO0CAf1BbTolbjoldViQ0M/iAfmRYTjEIS
+      E83Q8PXItBhnVJJRMAwdXw+oxRghS2YZPLR8DQJwj1JQ61Dka8pqOy4AvTj9
+      XA==
     EOS
   }
 
@@ -68,12 +59,13 @@ class CanvasTest < Minitest::Test
     define_method(:"test_#{type}") do
       klass = Termlot::Canvas.const_get(type.to_s.capitalize.to_sym)
       c = klass.new(120, 30)
-      c.lines!(@x, @sin).lines!(@x, @cos)
+      c.points!(@x, @sin)
+      c.lines!(@x, @cos) if c.respond_to?(:lines!)
       s = StringIO.new
       c.draw(s)
       if ENV["GENERATE"] # Generate new refs instead of actually testing.
         ref = Base64.encode64(Zlib::Deflate.deflate(s.string))
-        puts "\r:#{type} => <<~EOS"
+        puts "\r:#{type} => <<~EOS,"
         puts ref.split("\n").map { |v| "  #{v}" }
         puts "EOS"
       else

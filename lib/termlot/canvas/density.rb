@@ -11,6 +11,11 @@ module Termlot
         super(width, height, X_PIXEL_PER_CHAR, Y_PIXEL_PER_CHAR)
       end
 
+      # Multi-line segment in density canvas does not yield correct results
+      # due to the DDA algorithm doing multiple hits on a single pixel, so
+      # disable it altogether to avoid any confusion.
+      undef_method :lines!
+
       def prep(hits)
         @max = hits.flatten(1).map { |a| a.count }.max
       end

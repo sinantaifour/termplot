@@ -1,4 +1,4 @@
-# Termplot: Make plots in the terminal
+# Termlot: Make plots in the terminal
 
 Still a work in progress.
 

@@ -13,20 +13,24 @@ module Termlot
         @hits = (0..maxpy).map { (0..maxpx).map { [] } }
       end
 
-      def draw(out = $stdout)
-        prep(@hits)
-        (0...@height).each do |cy|
-          (0...@width).each do |cx|
-            sub = (0...@y_pixel_per_char).map { [nil] * @x_pixel_per_char }
-            (0...@y_pixel_per_char).each do |j|
-              (0...@x_pixel_per_char).each do |i|
-                sub[j][i] = @hits[cy * @y_pixel_per_char + j][cx * @x_pixel_per_char + i]
+      def drawer
+        Enumerator.new do |yielder|
+          # Deep-dup, in case @hits is changed while running the enumerator.
+          hits = Marshal.load(Marshal.dump(@hits))
+          sub = (0...@y_pixel_per_char).map { [nil] * @x_pixel_per_char }
+          (0...@height).each do |cy|
+            row = []
+            (0...@width).each do |cx|
+              (0...@y_pixel_per_char).each do |j|
+                (0...@x_pixel_per_char).each do |i|
+                  sub[j][i] = hits[cy * @y_pixel_per_char + j][cx * @x_pixel_per_char + i]
+                end
               end
+              char, color = render(sub)
+              row << style(char, color)
             end
-            char, color = render(sub)
-            print(out, char, color)
+            yielder << row.join("")
           end
-          out.puts
         end
       end
 
@@ -53,7 +57,7 @@ module Termlot
 
       private
 
-      include Utils::Printer # Adds the print method.
+      include Utils::Styler # Adds the style method.
 
       def render(hits)
         # Implemented by subclasses. Given the hits corresponding to this
@@ -62,11 +66,6 @@ module Termlot
         # The argument hits is an array of arrays of tuples [counter, color].
         # It's indexed in the y-direction first, and has size y_pixel_per_char
         # times x_pixel_per_char.
-      end
-
-      def prep(hits)
-        # Optionally implemented by subclasses to prepare for rendering. All
-        # hits are passed. See render above for a definition of hits.
       end
 
       def line!(x1, y1, x2, y2, color) # Using the DDA algorithm.

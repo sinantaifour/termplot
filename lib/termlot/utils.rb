@@ -1,6 +1,6 @@
 module Termlot
   module Utils
-    module Printer
+    module Styler
 
       RESET = "\033[0m"
 
@@ -13,9 +13,9 @@ module Termlot
         cyan:    "\033[36m",
       }
 
-      def print(out, chars, color)
-        style = COLORS[color]
-        out.print(style ? (style + chars + RESET) : chars)
+      def style(chars, color)
+        command = COLORS[color]
+        command ? (command + chars + RESET) : chars
       end
 
     end

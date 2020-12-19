@@ -56,20 +56,18 @@ class CanvasTest < Minitest::Test
     define_method(:"test_#{type}") do
       klass = Termlot::Canvas.const_get(type.to_s.capitalize.to_sym)
       c = klass.new(120, 30)
-      c.points!(@x, @sin, :green)
-      c.lines!(@x, @cos) if c.respond_to?(:lines!)
-      s = StringIO.new
-      c.draw(s)
+      c.points!(@x, @sin, :green).lines!(@x, @cos)
+      res = c.drawer.to_a.join("\n") + "\n"
       if ENV["GENERATE"] # Generate new refs instead of actually testing.
-        puts "\r" + s.string
-        ref = Base64.encode64(Zlib::Deflate.deflate(s.string))
+        puts "\r" + res
+        ref = Base64.encode64(Zlib::Deflate.deflate(res))
         puts ":#{type} => <<~EOS,"
         puts ref.split("\n").map { |v| "  #{v}" }
         puts "EOS"
       else
         ref = Zlib::Inflate.inflate(Base64.decode64(REFS[type]))
         ref = ref.force_encoding(Encoding::UTF_8)
-        assert_equal ref, s.string
+        assert_equal ref, res
       end
     end
   end

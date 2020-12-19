@@ -71,9 +71,16 @@ class CanvasTest < Minitest::Test
       c.lines!(@x, @sin).lines!(@x, @cos)
       s = StringIO.new
       c.draw(s)
-      ref = Zlib::Inflate.inflate(Base64.decode64(REFS[type]))
-      ref = ref.force_encoding(Encoding::UTF_8)
-      assert_equal ref, s.string
+      if ENV["GENERATE"] # Generate new refs instead of actually testing.
+        ref = Base64.encode64(Zlib::Deflate.deflate(s.string))
+        puts "\r:#{type} => <<~EOS"
+        puts ref.split("\n").map { |v| "  #{v}" }
+        puts "EOS"
+      else
+        ref = Zlib::Inflate.inflate(Base64.decode64(REFS[type]))
+        ref = ref.force_encoding(Encoding::UTF_8)
+        assert_equal ref, s.string
+      end
     end
   end
 

@@ -5,6 +5,8 @@ require 'zlib'
 
 class CanvasTest < Minitest::Test
 
+  HEIGHT = 30
+
   def setup
     x = 0.step(3 * Math::PI, by: 3 * Math::PI / 30).to_a
     @sin = x.map { |v| (Math.sin(v) + 1) / 2 }
@@ -52,10 +54,19 @@ class CanvasTest < Minitest::Test
     EOS
   }
 
+  CONCURRENT = <<~EOS.freeze
+    eJztmkEKgzAQRfdeoZco9jg9g3dopYsue4TUo+UkLZiNMi1miOPk58MDIWg0
+    z/EHBmO4xRxO10s/xPf3eB5Wg+EuDK7OhGFe3SR6eAqDk8pDd/g6G2GTaHVF
+    Y3wK6kLOvZBVbwRFUzQWP0WnrXksFsHFJ9yV9LSv0sv/OyGr3giKpmgsFqLN
+    otZnphfP7twbseqNoGiKxuIw0RgtF92q505LJ3Zl4RF7sMYwXigaC4puSXTK
+    0Me+GZruErzsTy7UtwBFUzQW7kSXTXBvSe1aPSoUTdFYuBat69546H5Urx6J
+    akRv/Ie0lgJfvIMPV7CIug==
+  EOS
+
   REFS.keys.each do |type|
     define_method(:"test_#{type}") do
       klass = Termlot::Canvas.const_get(type.to_s.capitalize.to_sym)
-      c = klass.new(120, 30)
+      c = klass.new(120, HEIGHT)
       c.points!(@x, @sin, :green).lines!(@x, @cos)
       res = c.drawer.to_a.join("\n") + "\n"
       if ENV["GENERATE"] # Generate new refs instead of actually testing.
@@ -69,6 +80,33 @@ class CanvasTest < Minitest::Test
         ref = ref.force_encoding(Encoding::UTF_8)
         assert_equal ref, res
       end
+    end
+  end
+
+  def test_concurrent
+    c = Termlot::Canvas::Braille.new(120, HEIGHT)
+    c.points!(@x, @sin, :green)
+    d1 = c.drawer
+    res1 = 5.times.map { d1.next }
+    c.lines!(@x, @cos)
+    d2 = c.drawer
+    res2 = d2.to_a
+    res1 += (HEIGHT - 5).times.map { d1.next }
+    res1 = res1.join("\n") + "\n"
+    res2 = res2.join("\n") + "\n"
+    if ENV["GENERATE"] # Generate new refs instead of actually testing.
+      puts "\r" + res1
+      ref = Base64.encode64(Zlib::Deflate.deflate(res1))
+      puts "CONCURRENT = <<~EOS.freeze"
+      puts ref.split("\n").map { |v| "  #{v}" }
+      puts "EOS"
+    else
+      ref1 = Zlib::Inflate.inflate(Base64.decode64(CONCURRENT))
+      ref1 = ref1.force_encoding(Encoding::UTF_8)
+      ref2 = Zlib::Inflate.inflate(Base64.decode64(REFS[:braille]))
+      ref2 = ref2.force_encoding(Encoding::UTF_8)
+      assert_equal ref1, res1
+      assert_equal ref2, res2
     end
   end
 

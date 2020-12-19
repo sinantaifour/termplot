@@ -13,7 +13,7 @@ module Termlot
         @hits = (0..maxpy).map { (0..maxpx).map { [] } }
       end
 
-      def draw(out = STDOUT)
+      def draw(out = $stdout)
         prep(@hits)
         (0...@height).each do |cy|
           (0...@width).each do |cx|
@@ -52,6 +52,8 @@ module Termlot
       end
 
       private
+
+      include Utils::Printer # Adds the print method.
 
       def render(hits)
         # Implemented by subclasses. Given the hits corresponding to this
@@ -101,10 +103,6 @@ module Termlot
         cell = @hits[py]&.[](px)
         return if px < 0 || py < 0 || cell.nil? # Don't hit out of bounds.
         cell << [x, y, color]
-      end
-
-      def print(out, char, color) # TODO: Use color.
-        out.print char
       end
 
     end

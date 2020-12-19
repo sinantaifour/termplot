@@ -39,7 +39,7 @@ module Termlot
 
       def lines!(x, y, color = nil)
         (0...(x.length - 1)).each do |i|
-          line!(x[i], y[i], x[i+1], y[i+1], color, i == 0)
+          line!(x[i], y[i], x[i+1], y[i+1], color)
         end
         self
       end
@@ -67,12 +67,12 @@ module Termlot
         # hits are passed. See render above for a definition of hits.
       end
 
-      def line!(x1, y1, x2, y2, color, first = true) # Using the DDA algorithm.
+      def line!(x1, y1, x2, y2, color) # Using the DDA algorithm.
         w, h = x2 - x1, y2 - y1
-        n = [w.abs * pw, h.abs * ph].max.round
+        n = [w.abs * pw, h.abs * ph].max
         dx, dy = w.fdiv(n), h.fdiv(n)
         x, y = x1, y1
-        hit!(x, y, color) if first # Don't hit twice on the edges of a line.
+        hit!(x, y, color)
         (1..n).each do
           x += dx
           y += dy

@@ -14,53 +14,53 @@ class CanvasTest < Minitest::Test
 
   REFS = {
     :ascii => <<~EOS,
-      eJydl0uuwyAMReesAmVSCVnKPpIuoSLZQsevb+/NRwSCr42ppVbVDfhgYrsw
-      xLiQz7aMcRgqzWi0xH3uvDS0w9z+tc4JQ0N6kDUrdlzTz4EUrQQnTMZ2owvE
-      hUFaDfY+kB9rb8FMplArL6gBsJ/+uD8rmTO8/3+q/i4wBQIUpNlGEaFVZy2B
-      ad0+Lz4SaRbuuGkr0C/N3eYicjNmeae0PTzBb2r5+IUrPHtmcM6NfrI+YxLf
-      s/P3nOwlvxvjxQzbwbe8l9eIDNXRXUNzpxNc9Q29Cnq5MGF3zfF+NYGRDwxm
-      c9FQTHbgBQprtHGBBtPAoU1cgQZiNsXrhcbkuOaNMRvjPTBcwmBI/lTOgLcP
-      l6SxArhdzn0FT+yvSgA3/XJPeqNhBSmBoec821LAOlkEq42kn8v8yWCF/Au3
-      TlgFLJLh+21yN3LpTwMLGQbjNR2RykhUsKcZaKiHGQ+F6LAnGOskW2ymHoYt
-      70wLXB3Dz6Njpd2uAS1yCroJLjH5xFpoPdjCiQG8YUI8Ll9UaRRDL/ZA75dC
-      9wUJpeJW
+      eJydl0GOwyAMRfecAmUzErKUeyQ9QkRyhVl35u5N0hKI+dimllpVH+yHKXbI
+      EONKPts6xmFgmtFojYfvvCraae742uaEoSENZM2KHbf0cyBBK8EJk7Hd6AJx
+      YZDGwd4H8iOPFsxkClxZoAbAfnrW8azkmuH9/0OMd4EpEKAgzTaLCK06awlM
+      2/5Z6plIs3H3QwL0S/uAP3uFKCq5vVPSHrqSCynabkvRhTF344pR+rnSqPP3
+      M9lL/gVjpTaB8VM7wI9KZdauKlRHdw35Tm8w6xtyFTADtcrX8gPclgNc9asJ
+      zETevloznopLxYE/EM5EOSMu0GCpOBRwAxrIeQS+aC0wEwc0YyMx5nsYWCEG
+      Q/IfC4YKD0dDcxtgvZz7Cp6q498Aq3HrSLiZJKsKsgWG5Nxc9MahkZtgmFPy
+      7udW5DZYaGHfcHk8AdwkE6hpncseAxK4ccJgvqYrUpmJCPY0A83YwxSyDAad
+      ZM/N1MOw5Z3RwOwa/r46Mu32GqCRU9IquMTkG2uh9WCLIAbwjgnxfPkiplEM
+      vdgTvb8UknsB2tPiOw==
     EOS
     :braille => <<~EOS,
-      eJzNms1u2zAQhO9+arVJGyeHoG57MIoiICkj6LFGevDz8EnKH6uQIpHizpBW
-      gYVhAx6R+kTuDkVa9WjVV6uMNfdWd1atRe8+T0HyZKXaTcJ0Viurvoeuug4f
-      wpdTuJGW2mnspr/3nloKmW/yKX2tvTWft8e60Oe79B8Ofogktb+t+gBq10AP
-      l3iH23f3R9kVZ9pNwo1EPwwzwyKNTKb9Voh7EXSMo9X3odWf8ls9eO2WlJ/l
-      wt6PD6OKEc+0KGjXqssGQI+H5ySZWdVCq2yuyGvPVj+gTZ/zrNOg/bi4C5n3
-      I9o2o4XCfMlm1TzlqD0SeS+nTYCezCDH65VgDWulpP4QlMdaZi4mc+YSaE95
-      NvtMjyNgtKWk8g4hr50XIcZBHRdZz0AvUmZ5NXZ+FOWUdpkXzHoKOkP5+ge4
-      VjRj3YRyfdYj0L76rXJkeDVgbdpR5llfxrVxAC3wnnurK+cvlLLCnZxAu+Lb
-      CrUD6IWC0IjXpc66EVyV/NNKcqA5E/3sR6D1hXlWt9UOoRnKci1luh4CaLiY
-      GIKXWV+zZikDbwVILVucdngx8cGwRuejJwUXQPiNQuwzbLry7zqK2r7tQgbJ
-      cuMnxN0sMa5p0OqG5rqhZS4P0AjUAE3mr0KzSJm5WpRjIMapCuiu+oJ1RqqT
-      GbJaTygZ4uJUC3RL1pRlbkE5XllWzCuCJlknxgi7MOFsxsr1BcW8Lug0L0z7
-      P1MWsq4OuuM2DEdaT+oFvX8Fbf1h8VYytlqA7oKXgFn/Cpuk7ssnlDKhBUNz
-      m7NUEBtC5oJvCmvVqvqtBLw5WyGcvzZyUtHzQt682qoEi5wXaAo6RvGJHq3C
-      yZUxqV6i5VfYfOyvB+S2AF2Ae6V25Q9u5bXb4Z5mkpuBjvF4PSTowF0PS8bD
-      VyXzfaT1cE/DwcPNsWZwhwNy4VDk7i+Fjlgw
+      eJzNmkFuwyAQRfc5NVWrNsmikqsuUqmqwM6iy2aX83CSGmxHWDEwMx/sSLNI
+      pHwzfszAd7DVB6s/rG5t+2KNsjoZrbJd/+HsJUfL0m4Vfc5GW/3pU+0TbvyH
+      s7+Rmtp57Obf945aDJkb8jl+raR2K8SO0VP8N40rkeJaAugJWTtH5hAfaVds
+      HqK685jiyBAtE/QQJ2v8JcwfedRgeMOY7QqUv/nCztWH074LtVLQypV29yO9
+      4ROrs4pSFpAatBdriI17H5c06zjoMWO/jAjH7rWv61LWyV0kGWbQnoBeTGkj
+      oF3Gwdy2b8DNA1oeKcESd9OGi3IV1kugF+qir81OOjaiXYfydSlncS9+LbK+
+      A53oPoRX1bqGKMe0e2vErBfqeg46u8ZBdV1nva5COcpLzDoA7XY/Qt3Ja7MC
+      6xagTNIirK+hDwlAG6IrKtxTAGVFqoxlrSb7k4xvI2on0Ibl8Gt5ICZlsV9m
+      zlDvr+V5dgHohW03G9ci8ywPXmXAMwQZgc6Dlm8mAK8WYy2mDM0QZAR28s0E
+      Zy0nJbYZwAxpyKSm/+ugjI32FJNU2QcTbsiNEwwaZc3alOpZZnoIN/MSoCGD
+      TNYifxgh2kKsi4BW1c31SpaZHuzNqRRoGi+ZFrXMUm1R1gVBg6wjeT8o5eH6
+      jM2pLOjSrB+ZMpN1cdADL4T1pIUo6wrrcizyB4aVQCvMh/jDRpSy+OhPFvnD
+      6EqgFXTY2P7Kn8GMXrGWw8gcRtcDPQSpreakpieLlZ8bC0Sqj2uDVow3eoz2
+      LR+SIluoUbsV4oB15HWtFUCnhh8jtSLntI+COJPzOqBvwx/GlwT7Gh9flvy8
+      q2KC1sE9Ty8ebo41kXPjiPepGrX7BwL3WAE=
     EOS
     :density => <<~EOS,
-      eJytl1EOwkAIRP85hcf1248ecE+iMWndLjMwsDaNsTDAc1thO47X+J6P+zFO
-      O/SKR5wkLWGzyIeBqw4bSaOVsVm8fnW+Eho2KOlt8l2fS4ESDbSkaW12jOOJ
-      qlYWh2j15DcgsggiDQ/O06a3R+aIQtO0tpjaHHFgltZWQ5MjC0v85kQtjjwo
-      VpiXNDiUkFBjQAADtjFCkQF3eTnEgECGMKocspwvs0FfiUMXU+XntMiJ7E/R
-      SK1kSBiw7S518RZihD88dHpegrD/99tH6HeiuM8CL0Xo9uRs4ng/R+hNp3z2
-      OkWA0JnTyi6E7j6rDG2CYOdZY9ggWHUxQnkvS1ugkDxB4cNNbFdC2hTB/8DB
-      33lKi+FDcphTfwdYOsbP4t01rGuzUwqBJa8HqEOzFLA3tsGb2g==
+      eJytl1EOwjAMQ/9zih1333xwwJ0EaVJX2sSJHUAIQeK4j6zbsuv9uu73sb6u
+      EQ+z5Cs3KZewITq/02uBz6tswS8mPxGf9P7V5SS0OMDY28ydz+e2gEQTRkpb
+      +06Ag6Q0B2h58wUINIGkwcW1bXl4aA5UStnaFmr3Iy+sbG0PNDmqsiJvTtTi
+      qItyhXlJdpDbFIWtBSZ6P6iKTBRhxAUJBsmdyAxfBGkOWo6FFuagXgEEPQ12
+      yA3yhzWRGOzr2NiCGBJLreZtFQRp0/G+AOH304/3RQiMvbgTGhA1Re+eA8fB
+      BkP37usUCUJxYqgXVqjJEOBVZQyVTQZnnEKo8xs7o666HEGeZ5VZeRcXKPEN
+      7oziPMKmLhH8H7zwc4/UDF9Swwz9CrBNcjPi0xrWHHiUknDJEe88FS8Wh30A
+      AOqdGg==
     EOS
     :dot => <<~EOS,
-      eJydl0kWgzAMQ/c+RXfe5QDc/2BlaME4kodk0Qci0o9JoER1jPF52n6m6rRi
-      Q1YaJ+ev3ufoqNjiEB8nP/ka0bCXtVU0skZxYvThR7WV0WNzwhEHNADeMXNe
-      tehpyEccyDOSGBH0hFqNC0f9xP3Bp3eRzGyIfGtiuItkborIYrlL5MgSkOXF
-      XSDHBk4Wb26Ss+50hclkbpHxeraNkWVObTzPiOs1UoiAC2VyhcvIArzh8/cS
-      axokI/AHQYCWT3CQJ0ArLrAyF6oYXJnm2gTTOALOp7nDRWQCzsmgCM4F3Rk4
-      Ize5s4GCY3KbO1k4OCIvcL0pAHPyEtfZIjAh99YzI4dg/NeyWK8jx2CA3o6N
-      gceWP/4fawZ26F9pVqtW6+JysH3Hg6P+Hst8c2Xt2nbp646emtZvsrfKF6H2
-      1Bc=
+      eJydl0sSwzAIQ/ecIjvvfIDc/2B12jT+CSHiRSbVgF6NDdOWUms9+mqfSlk0
+      caFU186+z/LotfzfShaNUn07m/Qel0ajVGZngzzHtXW+xDp2E9m6DDDqnjfG
+      lYo0BD4RRSMDRqsW34j1QFhaVIedgTW6kxt8f2fPgnPRfstEAXY2cl+RWQoh
+      28R9QeYJPtnW5CQ5CnfJtiWnyOg+z5pnZ3typp9BrGB3aRYMGE6WqoODLBgw
+      lCyeCiyhgUNSybCBgR0UDWi885+FB6Vqh8FKEeMLTckOOCZnuIjsgSNyFRqJ
+      2rlgfsFy+0VkF0zJee5G9sH4aldkonDXJAJ2h2f2fKEdBeNq6/3LoigYD0Bl
+      uMR2AXjHnLumlPlevYYReKl3Bb+lEtwhNwaPBXreeEcraAV8/P52teeqzZJM
+      bqmHfQDHktUF
     EOS
   }
 
@@ -71,11 +71,9 @@ class CanvasTest < Minitest::Test
       c.lines!(@x, @sin).lines!(@x, @cos)
       s = StringIO.new
       c.draw(s)
-      s.rewind
-      out = s.read
       ref = Zlib::Inflate.inflate(Base64.decode64(REFS[type]))
       ref = ref.force_encoding(Encoding::UTF_8)
-      assert_equal ref, out
+      assert_equal ref, s.string
     end
   end
 

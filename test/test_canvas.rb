@@ -3,19 +3,12 @@ require 'termlot'
 require 'base64'
 require 'zlib'
 
-class CanvasTest < Minitest::Test
+class TestCanvas < Minitest::Test
 
   HEIGHT = 30
 
-  def setup
-    x = 0.step(3 * Math::PI, by: 3 * Math::PI / 30).to_a
-    @sin = x.map { |v| (Math.sin(v) + 1) / 2 }
-    @cos = x.map { |v| (Math.cos(v) + 1) / 2 }
-    @x = x.map { |v| v / (3 * Math::PI) }
-  end
-
   REFS = {
-    :braille => <<~EOS,
+    :test_braille => <<~EOS,
       eJzVmktuwjAQhve5Apeo2uNwBu5gWtQGFlVTdcGiC9twgLLjPD5JnUcrguww
       nodjpF8IrCQ234zH44md3jr96bR1duOMcvqGFsunx5W/cLF8WF016nWg8erK
       smSVM9rpr46A59B0X47uAOVggxzqQKNFcajGv+vWTgAj3Yc8/Rb9On5N0zpl
@@ -31,7 +24,7 @@ class CanvasTest < Minitest::Test
       3Q+6sxiN+b95QP93vx1OUHqvbw9RHrvDZjtI9ACeIS3MwSdQNK0xPAGjql+n
       jJUQ
     EOS
-    :dot => <<~EOS,
+    :test_dot => <<~EOS,
       eJytlzsSgzAMRHtfgcadO08m6bgKZ+D+bQgZBn9W0kqJCiaApCevBMSl1Frz
       bcv2eu512R77dVLak+uO0w5GKX8gpfNY6ng9YLVcv5h0yeFLYrl0F/h07VRq
       TbzBFhIDpC44alMldrob/AMZcA9bOXAnCIrxtMSMR4ucAam7ry9EqgRqkoUS
@@ -41,7 +34,7 @@ class CanvasTest < Minitest::Test
       RPmZrIKhCiHh51gDnNdx0Z9YSeDIrupW1Spl6EBc+DGdDW4l+0X4Ac2A83ev
       eRyba+IOM7B36kk5vQEQ3haK
     EOS
-    :ascii => <<~EOS,
+    :test_ascii => <<~EOS,
       eJytl0uOwjAMhve5Apsqm5EqSx0xt6DcgFHaC7Dg/puhRX0k+f1IMl5AIba/
       v3m4tQ9hou6wy+Pn+qTL4/sp/ig0mkLwPoxTI8ktH/NI6f8VioZ5u/SGdO7z
       9UGz+mqm6CRkF1MIcNtF3zQx1Kf//CoRO7iJnHPVfAe4o2oyjpTJO/i8EoTm
@@ -52,25 +45,60 @@ class CanvasTest < Minitest::Test
       fN0MLHa+NxHc0fif3Igsg0G1qX9FjaM1cNLJUC/1ElXtHG3ToEo5i6G2viRK
       YgC/0X1YO05TY9vS13bkQyD3B4jTHgs=
     EOS
+    :test_enumerator_encapsulation => <<~EOS,
+      eJztmkEKgzAQRfdeoZco9jg9g3dopYsue4TUo+UkLZiNMi1miOPk58MDIWg0
+      z/EHBmO4xRxO10s/xPf3eB5Wg+EuDK7OhGFe3SR6eAqDk8pDd/g6G2GTaHVF
+      Y3wK6kLOvZBVbwRFUzQWP0WnrXksFsHFJ9yV9LSv0sv/OyGr3giKpmgsFqLN
+      otZnphfP7twbseqNoGiKxuIw0RgtF92q505LJ3Zl4RF7sMYwXigaC4puSXTK
+      0Me+GZruErzsTy7UtwBFUzQW7kSXTXBvSe1aPSoUTdFYuBat69546H5Urx6J
+      akRv/Ie0lgJfvIMPV7CIug==
+    EOS
   }
 
-  REFS.keys.each do |type|
+  def initialize(name)
+    @name = name.to_sym
+    super(name)
+  end
+
+  def setup
+    x = 0.step(3 * Math::PI, by: 3 * Math::PI / 30).to_a
+    # Keep everything in the range of 0 to 1.
+    @sin = x.map { |v| (Math.sin(v) + 1) / 2 }
+    @cos = x.map { |v| (Math.cos(v) + 1) / 2 }
+    @x = x.map { |v| v / (3 * Math::PI) }
+  end
+
+  def assert_canvas(canvas_or_res, name = nil)
+    name ||= @name
+    res = if canvas_or_res.is_a?(String)
+      canvas_or_res
+    else
+      canvas_or_res.drawer.to_a.join("\n") + "\n"
+    end
+    ref = if REFS[name]
+      tmp = Zlib::Inflate.inflate(Base64.decode64(REFS[name]))
+      tmp.force_encoding(Encoding::UTF_8)
+    else
+      nil
+    end
+    if ENV["GENERATE"] && ref != res # Generate new refs instead of testing.
+      puts "\r#{self.class}.#{name}"
+      puts res
+      ref = Base64.encode64(Zlib::Deflate.deflate(res))
+      puts ":#{name} => <<~EOS,"
+      puts ref.split("\n").map { |v| "  #{v}" }
+      puts "EOS"
+    elsif !ENV["GENERATE"]
+      assert_equal ref, res
+    end
+  end
+
+  [:braille, :dot, :ascii].each do |type|
     define_method(:"test_#{type}") do
       klass = Termlot::Canvas.const_get(type.to_s.capitalize.to_sym)
       c = klass.new(120, HEIGHT)
       c.points!(@x, @sin, :green).lines!(@x, @cos)
-      res = c.drawer.to_a.join("\n") + "\n"
-      if ENV["GENERATE"] # Generate new refs instead of actually testing.
-        puts "\r" + res
-        ref = Base64.encode64(Zlib::Deflate.deflate(res))
-        puts ":#{type} => <<~EOS,"
-        puts ref.split("\n").map { |v| "  #{v}" }
-        puts "EOS"
-      else
-        ref = Zlib::Inflate.inflate(Base64.decode64(REFS[type]))
-        ref = ref.force_encoding(Encoding::UTF_8)
-        assert_equal ref, res
-      end
+      assert_canvas(c)
     end
   end
 
@@ -83,30 +111,8 @@ class CanvasTest < Minitest::Test
     d2 = c.drawer
     res2 = d2.to_a
     res1 += (HEIGHT - 5).times.map { d1.next }
-    res1 = res1.join("\n") + "\n"
-    res2 = res2.join("\n") + "\n"
-    if ENV["GENERATE"] # Generate new refs instead of actually testing.
-      puts "\r" + res1
-      ref = Base64.encode64(Zlib::Deflate.deflate(res1))
-      puts "ref1 = <<~EOS"
-      puts ref.split("\n").map { |v| "  #{v}" }
-      puts "EOS"
-    else
-      ref1 = <<~EOS
-        eJztmkEKgzAQRfdeoZco9jg9g3dopYsue4TUo+UkLZiNMi1miOPk58MDIWg0
-        z/EHBmO4xRxO10s/xPf3eB5Wg+EuDK7OhGFe3SR6eAqDk8pDd/g6G2GTaHVF
-        Y3wK6kLOvZBVbwRFUzQWP0WnrXksFsHFJ9yV9LSv0sv/OyGr3giKpmgsFqLN
-        otZnphfP7twbseqNoGiKxuIw0RgtF92q505LJ3Zl4RF7sMYwXigaC4puSXTK
-        0Me+GZruErzsTy7UtwBFUzQW7kSXTXBvSe1aPSoUTdFYuBat69546H5Urx6J
-        akRv/Ie0lgJfvIMPV7CIug==
-      EOS
-      ref1 = Zlib::Inflate.inflate(Base64.decode64(ref1))
-      ref1 = ref1.force_encoding(Encoding::UTF_8)
-      ref2 = Zlib::Inflate.inflate(Base64.decode64(REFS[:braille]))
-      ref2 = ref2.force_encoding(Encoding::UTF_8)
-      assert_equal ref1, res1
-      assert_equal ref2, res2
-    end
+    assert_canvas(res1.join("\n") + "\n")
+    assert_canvas(res2.join("\n") + "\n", :test_braille)
   end
 
 end

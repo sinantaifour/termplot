@@ -20,7 +20,14 @@ class TestPlot < Minitest::Test
   end
 
   def assert_plot
-    s = StringIO.new; @p.draw(s); res = s.string
+    s = StringIO.new
+    begin
+      tmp, $stdout = $stdout, s
+      @p.draw
+    ensure
+      $stdout = tmp
+    end
+    res = s.string
     ref = if REFS[@name]
       tmp = Zlib::Inflate.inflate(Base64.decode64(REFS[@name]))
       tmp.force_encoding(Encoding::UTF_8)

@@ -91,10 +91,10 @@ module Termlot
       self
     end
 
-    def draw(out = $stdout)
-      draw_top_part(out)
-      draw_body(out)
-      draw_bottom_part(out)
+    def draw
+      draw_top_part
+      draw_body
+      draw_bottom_part
     end
 
     def width
@@ -182,15 +182,15 @@ module Termlot
       res
     end
 
-    def draw_top_part(out)
-      out.puts(" " * (1 + (canvas_width - @title.length) / 2) + @title) if title?
+    def draw_top_part
+      puts(" " * (1 + (canvas_width - @title.length) / 2) + @title) if title?
       line = BORDER[:tl] + BORDER[:t] * canvas_width + BORDER[:tr]
-      out.puts(style(line, SECONDARY))
+      puts(style(line, SECONDARY))
     end
 
-    def draw_bottom_part(out)
+    def draw_bottom_part
       line = BORDER[:bl] + BORDER[:b] * canvas_width + BORDER[:br]
-      out.puts(style(line, SECONDARY))
+      puts(style(line, SECONDARY))
       minx, maxx = *xlimits_strings
       xlabel = xlabel? ? @xlabel : ""
       left = (canvas_width - xlabel.length) / 2 - minx.length
@@ -203,10 +203,10 @@ module Termlot
         " " * right,
         style(maxx, SECONDARY),
       ].join("")
-      out.puts(line)
+      puts(line)
     end
 
-    def draw_body(out)
+    def draw_body
       legend = @legend.zip(@state.map { |_m, _x, _y, color| color })
       legend = legend.select { |t| t.first && !t.first.empty? }
       miny, maxy = *ylimits_strings
@@ -221,7 +221,7 @@ module Termlot
           row += " " * yticks
         end
         row += " " + style(*legend[i]) if legend[i]
-        out.puts(row)
+        puts(row)
       end
     end
 

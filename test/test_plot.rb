@@ -17,32 +17,13 @@ class TestPlot < Minitest::Test
     @p = Termlot::Plot.new
     @p.width = 120
     @p.height = 30
-  end
-
-  def assert_plot
-    s = StringIO.new
     begin
-      tmp, $stdout = $stdout, s
-      @p.draw
+      old_verbose, $VERBOSE = $VERBOSE, nil
+      # Assume a screen of 150x35.
+      TermInfo.instance_eval { def screen_width; 150; end }
+      TermInfo.instance_eval { def screen_height; 35; end }
     ensure
-      $stdout = tmp
-    end
-    res = s.string
-    ref = if REFS[@name]
-      tmp = Zlib::Inflate.inflate(Base64.decode64(REFS[@name]))
-      tmp.force_encoding(Encoding::UTF_8)
-    else
-      nil
-    end
-    if ENV["GENERATE"] && ref != res # Generate new refs instead of testing.
-      puts "\r#{self.class}.#{@name}"
-      puts res
-      ref = Base64.encode64(Zlib::Deflate.deflate(res))
-      puts ":#{@name} => <<~EOS,"
-      puts ref.split("\n").map { |v| "  #{v}" }
-      puts "EOS"
-    else
-      assert_equal ref, res
+      $VERBOSE = old_verbose
     end
   end
 
@@ -111,24 +92,70 @@ class TestPlot < Minitest::Test
     assert_plot
   end
 
+  def test_lines
+    @p.add(@x, @sin)
+    @p.xline(0)
+    @p.yline(Math::PI * 2)
+    assert_plot
+  end
+
+  def test_decorations
+    @p.add(@x, @sin)
+    @p.add(@x, @cos)
+    @p.legend = [nil, "cos(x)"] # Incomplete legend
+    @p.title = "Trig"
+    @p.xlabel = "x"
+    assert_plot
+  end
+
   def test_size_full
-    # TODO.
+    @p.width = :full
+    @p.height = :full
+    @p.add(@x, @sin)
+    assert_plot
   end
 
   def test_size_auto
-    # TODO.
+    @p.width = :auto
+    @p.height = :auto
+    @p.add(@x, @sin)
+    assert_plot
   end
 
-  def test_lines
-    # TODO.
+  private
+
+  def assert_plot
+    res, ref = get_res, get_ref
+    if ENV["GENERATE"] && ref != res # Generate new refs instead of testing.
+      puts "\r#{self.class}.#{@name}"
+      puts res
+      ref = Base64.encode64(Zlib::Deflate.deflate(res))
+      puts ":#{@name} => <<~EOS,"
+      puts ref.split("\n").map { |v| "  #{v}" }
+      puts "EOS"
+    else
+      assert_equal ref, res
+    end
   end
 
-  def test_legend_incomplete
-    # TODO.
+  def get_res
+    io = StringIO.new
+    begin
+      old_stdout, $stdout = $stdout, io
+      @p.draw
+    ensure
+      $stdout = old_stdout
+    end
+    io.string
   end
 
-  def test_title_and_label
-    # TODO.
+  def get_ref
+    if REFS[@name]
+      tmp = Zlib::Inflate.inflate(Base64.decode64(REFS[@name]))
+      tmp.force_encoding(Encoding::UTF_8)
+    else
+      nil
+    end
   end
 
   REFS = {
@@ -208,6 +235,70 @@ class TestPlot < Minitest::Test
       BBeYt9igtiw0SlGTf08ssTzU98Pya5XMIVTUoqBGcS06fOEU0gqg+PqWiFlR
       6xDrcFtCYwOzpjddpdVh9T4nvSebMq/Ersw9ukz1hl1TW7O+urGbNFOHXBMW
       eT6jLIyCiO4FtOTRvMl3vJCSkFE3IEHEQr/5il/MQxRi
+    EOS
+    :test_lines => <<~EOS,
+      eJzt2k1OwkAUAOA9V+iGC0iKECpn4Qzcof7EH2KMmi6IcdEORHdGFyYkepqe
+      RClDGOy08978S4bM4pFQ+uZ97TBDJ5qM42mZ3ZZZGpqBdh9N4mkn2lT5bP2m
+      zFN4iyaD/rQs8vWBmzhfMvEjE8+Y+KbhM2QXkyU6GduNrLCFIumug+iiPTR8
+      hjmWXEgI7uiruN+L13FX5qLg9GzWdni9ZxI98A28Tp1nTHxqsCAsWff3hTPE
+      6rUnzl6XReqfqghThVELqQImrfqzTNXr+Ra+3ZOtdBy3O/k6kAWk2hJQutLc
+      Q5v7OpA2i3EGnXPlOnxAhx48Ha2upnz3sr5m9Ig3eg10tLpSQ6KgDnPQ0IOk
+      M+H298sBY4UrMZVfBEUrDJRRJe+salDalVBWYCgLSn5Z7UMZUoJbwaCsKXlk
+      xUDR4q2Md7nFCgBlWankzjYu3aFtxWj93nXOJ1T0RHR65+//Uq+iozlYdBPq
+      tdK5cmvSK5zokZX9cYdTh9o6DUCXv23SXFpr9LzfzOXz4iYHwuSQvzqqw6cQ
+      yvbVjFw5Gjo7ey+RL1d18IrFoUzj+IZ5anO4LE5kOL+9V9szBpaaDPhfTM0m
+      7HwosDiQEc9RA4ttGdC6IbBYlYGu5QKLPRnE+jqwiGQ0Pc/FPWMNLAAZ5We1
+      6P87AwsYZyEzoHFukifAsYEFI8PcNuxmT9EmjZoMeF9a8FFUAu865Si17mpF
+      JObasIqP6MbYLWbmeuv2obZq0tPpVmWO6WZks6/qVOPe8HiYJMl4FCej8eCk
+      yuIHQyW19A==
+    EOS
+    :test_decorations => <<~EOS,
+      eJztmrlOw0AQhntewY1LKEAOIELegy4lBaKIkKChNIcCBBQuFxQUtpMHIKLh
+      efwkxNYmHtu7zh6zRxCRi4kw2X//b73HeHxf/HN0fnqy4fV7wSCLnrIo/L/U
+      rhevHwwWhl7nX7z+3u4gix9A/AbitIzTaR5ncdhyze/sDLIkJv81j+MIxG8g
+      fgDxK+OeaRmnt6tbN3YRQ0Jg1JRh4Ogvm1wdSPO4sxPkse8XvTk+u9i83GoM
+      uaaTS201N5KQoofS/VGb7Gb3rY8lyviJQHzFlOe4XZByPn0zsVd6cw+G/7C8
+      U1R4eycSG8xJp2Jhzi67JAiZ3oMUtPkFtPNZUu/BPRisQ6OcyYMHCd8Id8Ed
+      c6TYdsBUljf4CcyYrZidhHuQGsJLNH8JP67OmiM+Ode1jyvTTm0hkptgyS9/
+      gxEv7oQM2E95te54IoU0Gdf/SoR/IAmfmYCpgtEdK0QAkp9h9Hi9GKLMrk55
+      wk2yXfJ6wTSD0bAnfCR5JFeEqy32yxbTCRpAk/QMWMHBjV8p1JvOlBYZFGLm
+      WWlyYBUlxWOPrp21GkNKHkDwlFih56o5rWzVz7M6huM6YmxagTWXcgCUm3ZK
+      vVLeo6R5vGbS9VnBMJhxkxoFip5kMtkax0FREDVOaPwyJhiIMDzRR4mVFRYm
+      9lFaxbmtprC6s/w44Zqjh5tddLgPGC40LHO0cbOITl/S0joxnbisEHOZlbon
+      mnGV6rASPT/MRM9asFL0RD8ufGK01Bxl4VKBFpuApmKOEW4Z+vQI3n1NbnE2
+      GQlkhbTJQPfEFC66OvF34l6zbOFR9XCtntIw5olBXBWB70CgQFEVM/XbPG4v
+      y8H43/VQ1jHZt6rGXDIOsCLwlQsjZcmCRaK0Ki1pnhSGkZ1HUdo3S0hZAmFd
+      JeQ2ATwr8yerAHjVkkVh3lqdS3JbIf0eZiWw7SGg5natzHib1Bkvxkhku67+
+      D1zFBnXDLxwNFmXcop9LrruKNno7+7v73W63dxB0D3p7h0Xzv9XTmEU=
+    EOS
+    :test_size_auto => <<~EOS,
+      eJzdmEtOwzAQhve9Qja5AJVLq4acJWfIHVKoECCEoIoqFizy6AHgSj4JxDF0
+      HI8fSew0IvLirxS3/3z2zNgNkpikNH+mefa/xmuQkHQRtOHdNh9okaEjSNar
+      lFZZ806riyPQT0A/Av0G9OGsq73ut7yO1kBZ4MaUgRyGBALBMr1akkaHBuSI
+      R+hrp5sFkVfVdJiRDZJ3WWomCrYVUCG08OdRUkS8fFiRkL3U/neqarVt3dbn
+      iWUmo7BhxoH1tyAYeQBLeO8RG4/105wSlotc7js0jMwQYHe9I0aw+UlYHmU+
+      EJjg9h3HZmLmBFjHS1U7pjVyY+lp/VU1LSq3nGRaqjoxCphdcTXTkgqIBarB
+      K4Rb+HIGCWlCL872q3UrnAkSrzCm4uEKiW8YE/Kgpr5gC2Po0WN+POiI85DD
+      BjQnHgIV0IZqde4gh2LXOXJpHgIVeFE+dQ8NkJb8jqA95I4GFdNX/Fb7yyy/
+      9L8azgerbYuQxUf4Fb73w2bHy831JoqieEuibby+YV/8Df3lKDM=
+    EOS
+    :test_size_full => <<~EOS,
+      eJztm01uwjAQhfdcIRsuUBQKIs1ZOAN3oD+qSltVpWLRRReQcIDSI/kkbRKD
+      xsRO4sSOZ1yQF65E7XnzPk9MEgfzOFywzSvbLC+NVHsP5uFiEBT+3WV/sO2y
+      XQvmk/GCpctskKK/3YP+BvQ/QP8Z9FeK7yTyMYu5WgfsTTOQ+bXiO2Cc5MFY
+      5iFveX88CrP+sCuJRXS7rULlbc2w5WQUop077IqpZKngaFWfFoPJhFQM/z7t
+      MVEBojuCUKpAedr9m5JUA0jdUrOaVRO8SEh5ae8tH+EJLIZHz0kxC4gkmaCy
+      7HQqSzc6JLK+zDjJR0v9ryY8hx2qcFUCWy2yDlBYUnMu69PnXQnn/dtMgVDm
+      8KC3ttpCYVuNoAngvv3xsHZwOW9W5EjWVl3JaAVFP0Scy9LEHXnjQgxdbatn
+      SdJqN3UR6Nl/OGnrfRKqJtl22akI8nnVOGiy0A/E5RlhiaNIgSv/hRzW1dPG
+      LNj7EaGtiey20va2WyOHlVw0g8It3xJNBG9VSIi4d5pDNRcNoMBDhKCJFBd4
+      iBByqOCiDgpsRAiaiHCBjQghhzIuKqHASYSgCT0XOIkQcljiogEUeEAQpCDG
+      ATMIQg7XtQg4j1QeOErz8dt+jJOQ4Qyr51TcZvQMZ/g8J+Q2I2k4w+Q5LbcZ
+      VcNPmdZ6bGYpBkJuM8KGM+k6T/q+A9/zAzQTYdM1HCa++nmo2bnImcx88PmU
+      /t5eQONTGHopsPdceWD4yYTkYCVsDI85O0vww2d2fvfI/IsAfExSGzKZCm8M
+      Z9Z+nEkWNs0yLoryyXlolKlLOoZXLowmxz/DmWzNdztLk/1X6tdSB+q8RABa
+      pwKhyRlOySWd8oIXpXnsPFCZm6Z5sBoe9RXM3yvGKR3idi7cXALPjipf8bPK
+      R142ro/wX5puy29bD4a5gSE/ee7ykwcSj6bX0yiK4lkYzeLJTR7jL4uoeO0=
     EOS
   }
 

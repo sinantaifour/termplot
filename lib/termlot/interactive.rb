@@ -51,6 +51,10 @@ module Termlot
       nil
     end
 
+    def nocolor
+      Termlot::Utils::Styler.nocolor!
+    end
+
     [
       :width, :height, :xlimits, :ylimits,
       :type, :legend, :title, :xlabel

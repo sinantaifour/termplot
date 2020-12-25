@@ -14,7 +14,16 @@ module Termlot
         grey:    "\033[90m",
       }
 
+      def self.nocolor!
+        @nocolor = true
+      end
+
+      def self.nocolor?
+        @nocolor
+      end
+
       def style(chars, color)
+        return chars if Styler.nocolor?
         command = COLORS[color]
         command ? (command + chars + RESET) : chars
       end

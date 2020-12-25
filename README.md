@@ -1,11 +1,160 @@
 # Termlot: Make plots in the terminal
 
-Still a work in progress.
+I often find myself analyzing data in Ruby. Visually representing the data
+helps one find interesting angles and dig in. However, I was never satisfied
+with my setup because:
+
+* Existing plotting libraries in Ruby have shortcomings:
+  * They are not designed to be used in an interactive shell; they either
+    write their output to a file, or if they open a window showing the output
+    it blocks further commands in the shell.
+  * They have a lot of dependencies.
+* Moving data between my Ruby shell (where I am doing the analysis), and another
+  environment for plotting (e.g. Jupyter notebook with `matplotlib`) is
+  cumbersome.
+
+`Termlot` solves the issues above by having the plots right in the terminal,
+and on top of that, provides some other advantages:
+
+* Your workflow is the same whether you are working locally or remotely over
+  SSH.
+* You can capture your full data analysis session with the plots using `script`.
+
+You might think the fidelity of the terminal is not good enough to make any
+use of these plots. This hasn't been my experience; using braille characters
+we get 8 pixels per terminal character, and when doing data analysis I just
+need something rough to get an idea of what the data is like.
+
+## Installation
+
+```console
+$ gem install termlot
+```
+
+## Usage
+
+```ruby
+require 'termlot'
+
+plot = Termlot::Plot.new
+x = 0.step(3 * Math::PI, by: 3 * Math::PI / 30).to_a
+sin = x.map { |v| Math.sin(v) }
+cos = x.map { |v| Math.cos(v) }
+
+plot.add(x, sin)
+plot.add(x, cos, 'xg') # The third argument is for style and color, 'x' is to
+                       # create a scatter plot, 'g' is for green.
+plot.draw
+```
+
+This outputs:
+
+![Example](example.png)
+
+## Interactive Mode
+
+While using an interactive shell, you might not want all the boiler-plate. You
+can include `Termlot::Interactive` to import functions directly into the
+interactive shell. Here is an example:
+
+```
+> require 'termlot'
+true
+> include Termlot::Interactive
+Object
+> type :dot # By default, Termlot uses braille characters to render, but these
+            # wouldn't render well in the README, so switch to the dot renderer.
+nil
+> nocolor # Don't render with colors, we can't show the colors in README anyway.
+nil
+> plot([0, 1], [0, 1])
+┌────────────────────────────────────────────────────────────────────────┐
+│                                                                    ..''│1
+│                                                              ...'''    │ 
+│                                                         ...''          │ 
+│                                                    ..'''               │ 
+│                                              ...'''                    │ 
+│                                         ...''                          │ 
+│                                    ..'''                               │ 
+│                               ...''                                    │ 
+│                          ..'''                                         │ 
+│                    ...'''                                              │ 
+│               ...''                                                    │ 
+│          ..'''                                                         │ 
+│     ..'''                                                              │ 
+│..'''                                                                   │0
+└────────────────────────────────────────────────────────────────────────┘
+ 0                                                                      1
+nil
+> plot([0, 1], [0.5, 0])
+┌──────────────────────────────────────────────────────────────────────┐
+│''..                                                                  │0.5
+│    '''...                                                            │   
+│          ''...                                                       │   
+│               ''...                                                  │   
+│                    '''..                                             │   
+│                         '''..                                        │   
+│                              '''...                                  │   
+│                                   ''...                              │   
+│                                        ''...                         │   
+│                                             ''...                    │   
+│                                                  '''..               │   
+│                                                       '''..          │   
+│                                                            '''...    │   
+│                                                                  ''..│0  
+└──────────────────────────────────────────────────────────────────────┘
+ 0                                                                    1
+nil
+> hold :on
+nil
+> plot([0, 1], [0, 1])
+┌────────────────────────────────────────────────────────────────────────┐
+│                                                                    ..''│1
+│                                                              ...'''    │ 
+│                                                         ...''          │ 
+│                                                    ..'''               │ 
+│                                              ...'''                    │ 
+│                                         ...''                          │ 
+│                                    ..'''                               │ 
+│''''''.....                    ...''                                    │ 
+│           ''''''.....    ..'''                                         │ 
+│                    ..:''''......                                       │ 
+│               ...''             ''''.....                              │ 
+│          ..'''                           ''''''.....                   │ 
+│     ..'''                                           '''''......        │ 
+│..'''                                                           '''''...│0
+└────────────────────────────────────────────────────────────────────────┘
+ 0                                                                      1
+nil
+> width 30
+┌───────────────────────────┐
+│                         .'│1
+│                       .'  │ 
+│                     .'    │ 
+│                   .'      │ 
+│                  .'       │ 
+│                .'         │ 
+│              .'           │ 
+│'''..      .''             │ 
+│     ''...'                │ 
+│       .'''..              │ 
+│      :      '..           │ 
+│    .'          ''..       │ 
+│  .'                ''..   │ 
+│.'                      ''.│0
+└───────────────────────────┘
+ 0                         1
+nil
+
+```
 
 ## Acknowledgement
 
-This gem is a rewrite of the
-[`unicode_plot`](https://github.com/red-data-tools/unicode_plot.rb)
-gem. It follows a similar overall structure, but trims some of the
-functionality, keeps the code cleaner and more readable, and creates a more
-usable API.
+This gem heavily inspired by the
+[`unicode_plot`](https://github.com/red-data-tools/unicode_plot.rb) gem.
+
+It follows a similar overall structure, however it:
+* Has cleaner more maintainable code.
+* Trims some of the functionality (e.g. bar plots).
+* Creates a more usable API.
+* Adds the `Interactive` module.

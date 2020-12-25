@@ -36,7 +36,7 @@ module Termlot
     SECONDARY = :grey
 
     attr_reader :width, :height, :xlimits, :ylimits, :type
-    attr_writer :legend, :title, :xlabel
+    attr_writer :legend, :title, :xlabel # TODO: Add sanity checks.
 
     def initialize
       @state = []

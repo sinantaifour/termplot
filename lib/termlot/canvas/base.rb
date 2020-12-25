@@ -6,6 +6,7 @@ module Termlot
       attr_reader :height
 
       def initialize(width, height, x_pixel_per_char, y_pixel_per_char)
+        @counter = 0
         @width = width
         @height = height
         @x_pixel_per_char = x_pixel_per_char
@@ -49,10 +50,10 @@ module Termlot
       end
 
       def inspect
-        atts = [:width, :height].map do |a|
+        atts = [:counter, :width, :height].map do |a|
           "@#{a}=#{instance_variable_get(:"@#{a}").inspect}"
         end
-        "#<#{self.class} (#{@hits.flatten(2).count} hits) #{atts.join(", ")}>"
+        "#<#{self.class} #{atts.join(", ")}>"
       end
 
       private
@@ -101,7 +102,8 @@ module Termlot
         px, py = *[x * maxpx, (1 - y) * maxpy].map(&:round)
         cell = @hits[py]&.[](px)
         return if px < 0 || py < 0 || cell.nil? # Don't hit out of bounds.
-        cell << [x, y, color]
+        @counter += 1
+        cell << [@counter, color]
       end
 
     end

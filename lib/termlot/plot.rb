@@ -1,6 +1,11 @@
 module Termlot
   class Plot
 
+    MIN = {
+      width: 20,
+      height: 10,
+    }.freeze
+
     COLORS = {
       'r'.freeze => :red,
       'g'.freeze => :green,
@@ -30,7 +35,7 @@ module Termlot
 
     SECONDARY = :grey
 
-    attr_writer :width, :height, :xlimits, :ylimits, :type
+    attr_reader :width, :height, :xlimits, :ylimits, :type
     attr_writer :legend, :title, :xlabel
 
     def initialize
@@ -53,7 +58,8 @@ module Termlot
     end
 
     def add(*args)
-      x, y, opts, style, color = *([nil] * 5)
+      # Fill x, y, and opts based on args.
+      x, y, opts = nil, nil, ""
       case args.map(&:class)
       when [Array]
         y = args[0]
@@ -69,24 +75,26 @@ module Termlot
       end
       x = (0...(y.length)).to_a unless x
       raise(ArgumentError, "Incompatible array sizes") if x.length != y.length
-      if opts
-        opts.chars.each do |c|
-          if STYLES.keys.include?(c)
-            raise(ArgumentError, "Repeated style options") if style
-            style = STYLES[c]
-          elsif COLORS.keys.include?(c)
-            raise(ArgumentError, "Repeated color options") if color
-            color = COLORS[c]
-          else
-            raise(ArgumentError, "Invalid option: '#{c}'")
-          end
+      # Parse style and color out of opts.
+      style, color = nil, nil
+      opts.chars.each do |c|
+        if STYLES.keys.include?(c)
+          raise(ArgumentError, "Repeated style options") if style
+          style = STYLES[c]
+        elsif COLORS.keys.include?(c)
+          raise(ArgumentError, "Repeated color options") if color
+          color = COLORS[c]
+        else
+          raise(ArgumentError, "Invalid option: '#{c}'")
         end
       end
+      # Fill style and color if not provided from opts.
       style = STYLES.values.first unless style
       unless color
         color = COLORS.values[@color]
         @color += 1
       end
+      # Add to state.
       @state << [style, x, y, color]
       self
     end
@@ -97,7 +105,39 @@ module Termlot
       draw_bottom_part
     end
 
-    def width
+    [:width, :height].each do |dim|
+      define_method(:"#{dim}=") do |value|
+        if [:auto, :full].include?(value) || (value.is_a?(Integer) && value > 0)
+          too_small = value.is_a?(Integer) && value <= MIN[dim]
+          raise(ArgumentError, "Value too small") if too_small
+        else
+          raise(ArgumentError, "Invalid value")
+        end
+        instance_variable_set(:"@#{dim}", value)
+      end
+    end
+
+    [:xlimits, :ylimits].each do |lim|
+      define_method(:"#{lim}=") do |value|
+        if value == :auto || value.is_a?(Array) && value.length == 2
+          wrong_order_or_zero = (value[1] - value[0]) <= 0
+          raise(ArgumentError, "Limits are not valid") if wrong_order_or_zero
+        else
+          raise(ArgumentError, "Invalid value")
+        end
+        instance_variable_set(:"@#{lim}", value)
+      end
+    end
+
+    def type=(value)
+      mod = Termlot::Canvas
+      canvases = mod.constants.select { |c| mod.const_get(c) < mod::Base }
+      valid = canvases.map { |s| s.to_s.downcase.to_sym }
+      raise(ArgumentError, "Invalid value") unless valid.include?(value)
+      @type = value
+    end
+
+    def calculated_width
       case @width
       when :auto
         TermInfo.screen_width / 2
@@ -108,7 +148,7 @@ module Termlot
       end
     end
 
-    def height
+    def calculated_height
       case @height
       when :auto
         TermInfo.screen_height / 2
@@ -119,13 +159,13 @@ module Termlot
       end
     end
 
-    def xlimits
+    def calculated_xlimits
       return @xlimits unless @xlimits == :auto
       values = @state.map { |_m, x, _y, _color| x }.flatten
       [values.min, values.max]
     end
 
-    def ylimits
+    def calculated_ylimits
       return @ylimits unless @ylimits == :auto
       values = @state.map { |_m, _x, y, _color| y }.flatten
       [values.min, values.max]
@@ -136,21 +176,23 @@ module Termlot
     include Utils::Styler # Adds the style method.
 
     def xlimits_strings
-      xlimits.map(&:to_s)
+      calculated_xlimits.map(&:to_s)
     end
 
     def ylimits_strings
-      ylimits.map(&:to_s)
+      calculated_ylimits.map(&:to_s)
     end
 
     def canvas_width
       yticks = ylimits_strings.map(&:length).max
       legend = @legend.compact.map(&:length).max || 0
-      width - yticks - (legend == 0 ? 0 : legend + 1) - 2 # 2 for the borders.
+      res = calculated_width - yticks - (legend == 0 ? 0 : legend + 1)
+      res - 2 # 2 for the borders.
     end
 
     def canvas_height
-      height - (title? ? 1 : 0) - 3 # 2 for the borders, 1 for the xticks.
+      res = calculated_height - (title? ? 1 : 0)
+      res - 3 # 2 for the borders, 1 for the xticks.
     end
 
     def title?
@@ -163,7 +205,7 @@ module Termlot
 
     def canvas
       klass = Canvas.const_get(@type.to_s.capitalize.to_sym)
-      minx, maxx, miny, maxy = *xlimits, *ylimits
+      minx, maxx, miny, maxy = *calculated_xlimits, *calculated_ylimits
       res = klass.new(canvas_width, canvas_height)
       @xlines.each do |y|
         y = (y - miny).fdiv(maxy - miny)

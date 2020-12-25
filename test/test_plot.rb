@@ -17,6 +17,7 @@ class TestPlot < Minitest::Test
     @p = Termlot::Plot.new
     @p.width = 120
     @p.height = 30
+    @p.type = :braille
     begin
       old_verbose, $VERBOSE = $VERBOSE, nil
       # Assume a screen of 150x35.
@@ -56,6 +57,34 @@ class TestPlot < Minitest::Test
     assert_raises(ArgumentError) { @p.add([1, 2], [3, 4], 'cc') }
     assert_raises(ArgumentError) { @p.add([1, 2], [3, 4], 'cm') }
     assert_raises(ArgumentError) { @p.add([1, 2], [3, 4], 'cm-') }
+  end
+
+  def test_dimensions_invalid
+    [:width, :height].each do |dim|
+      m = :"#{dim}="
+      assert_raises(ArgumentError) { @p.send(m, "String") }
+      assert_raises(ArgumentError) { @p.send(m, :invalid_sym) }
+      assert_raises(ArgumentError) { @p.send(m, [1, 2]) }
+      assert_raises(ArgumentError) { @p.send(m, 100.0) }
+      assert_raises(ArgumentError) { @p.send(m, 0) }
+      assert_raises(ArgumentError) { @p.send(m, -1) }
+      assert_raises(ArgumentError) { @p.send(m, Termlot::Plot::MIN[dim] - 1) }
+    end
+  end
+
+  def test_limits_invalid
+    [:xlimits, :ylimits].each do |lim|
+      m = :"#{lim}="
+      assert_raises(ArgumentError) { @p.send(m, "String") }
+      assert_raises(ArgumentError) { @p.send(m, :invalid_sym) }
+      assert_raises(ArgumentError) { @p.send(m, 1) }
+      assert_raises(ArgumentError) { @p.send(m, [1, 1]) }
+      assert_raises(ArgumentError) { @p.send(m, [2, 1]) }
+    end
+  end
+
+  def test_type_invalid
+    assert_raises(ArgumentError) { @p.type = :foobar }
   end
 
   def test_add_first_form

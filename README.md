@@ -59,14 +59,10 @@ interactive shell. Here is an example:
 
 ```
 > require 'termlot'
-true
 > include Termlot::Interactive
-Object
 > type :dot # By default, Termlot uses braille characters to render, but these
             # wouldn't render well in the README, so switch to the dot renderer.
-nil
 > nocolor # Don't render with colors, we can't show the colors in README anyway.
-nil
 > plot([0, 1], [0, 1])
 ┌────────────────────────────────────────────────────────────────────────┐
 │                                                                    ..''│1
@@ -85,7 +81,6 @@ nil
 │..'''                                                                   │0
 └────────────────────────────────────────────────────────────────────────┘
  0                                                                      1
-nil
 > plot([0, 1], [0.5, 0])
 ┌──────────────────────────────────────────────────────────────────────┐
 │''..                                                                  │0.5
@@ -104,9 +99,7 @@ nil
 │                                                                  ''..│0  
 └──────────────────────────────────────────────────────────────────────┘
  0                                                                    1
-nil
 > hold :on
-nil
 > plot([0, 1], [0, 1])
 ┌────────────────────────────────────────────────────────────────────────┐
 │                                                                    ..''│1
@@ -125,7 +118,6 @@ nil
 │..'''                                                           '''''...│0
 └────────────────────────────────────────────────────────────────────────┘
  0                                                                      1
-nil
 > width 30
 ┌───────────────────────────┐
 │                         .'│1
@@ -144,8 +136,6 @@ nil
 │.'                      ''.│0
 └───────────────────────────┘
  0                         1
-nil
-
 ```
 
 ## Acknowledgement

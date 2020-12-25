@@ -20,31 +20,6 @@ class TestCanvas < Minitest::Test
     @x = x.map { |v| v / (3 * Math::PI) }
   end
 
-  def assert_canvas(canvas_or_res, name = nil)
-    name ||= @name
-    res = if canvas_or_res.is_a?(String)
-      canvas_or_res
-    else
-      canvas_or_res.drawer.to_a.join("\n") + "\n"
-    end
-    ref = if REFS[name]
-      tmp = Zlib::Inflate.inflate(Base64.decode64(REFS[name]))
-      tmp.force_encoding(Encoding::UTF_8)
-    else
-      nil
-    end
-    if ENV["GENERATE"] && ref != res # Generate new refs instead of testing.
-      puts "\r#{self.class}.#{name}"
-      puts res
-      ref = Base64.encode64(Zlib::Deflate.deflate(res))
-      puts ":#{name} => <<~EOS,"
-      puts ref.split("\n").map { |v| "  #{v}" }
-      puts "EOS"
-    else
-      assert_equal ref, res
-    end
-  end
-
   [:braille, :dot, :ascii].each do |type|
     define_method(:"test_#{type}") do
       klass = Termlot::Canvas.const_get(type.to_s.capitalize.to_sym)
@@ -65,6 +40,40 @@ class TestCanvas < Minitest::Test
     res1 += (HEIGHT - 5).times.map { d1.next }
     assert_canvas(res1.join("\n") + "\n")
     assert_canvas(res2.join("\n") + "\n", :test_braille)
+  end
+
+  private
+
+  def assert_canvas(canvas_or_res, name = nil)
+    name ||= @name
+    res, ref = get_res(canvas_or_res), get_ref(name)
+    if ENV["GENERATE"] && ref != res # Generate new refs instead of testing.
+      puts "\r#{self.class}.#{name}"
+      puts res
+      ref = Base64.encode64(Zlib::Deflate.deflate(res))
+      puts ":#{name} => <<~EOS,"
+      puts ref.split("\n").map { |v| "  #{v}" }
+      puts "EOS"
+    else
+      assert_equal ref, res
+    end
+  end
+
+  def get_res(canvas_or_res)
+    res = if canvas_or_res.is_a?(String)
+      canvas_or_res
+    else
+      canvas_or_res.drawer.to_a.join("\n") + "\n"
+    end
+  end
+
+  def get_ref(name)
+    if REFS[name]
+      tmp = Zlib::Inflate.inflate(Base64.decode64(REFS[name]))
+      tmp.force_encoding(Encoding::UTF_8)
+    else
+      nil
+    end
   end
 
   REFS = {

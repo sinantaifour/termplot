@@ -11,6 +11,7 @@ module Termlot
         yellow:  "\033[33m",
         magenta: "\033[35m",
         cyan:    "\033[36m",
+        grey:    "\033[90m",
       }
 
       def style(chars, color)

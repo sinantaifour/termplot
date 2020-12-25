@@ -13,5 +13,7 @@ Gem::Specification.new do |s|
   s.files       = Dir[DIR + '/lib/**/*.rb']
   s.license     = 'MIT'
 
+  s.add_dependency 'ruby-terminfo', '~> 0.1'
+
   s.add_development_dependency 'rake', '~> 12.0'
 end

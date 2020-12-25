@@ -5,8 +5,6 @@ require 'zlib'
 
 class TestCanvas < Minitest::Test
 
-  HEIGHT = 30
-
   def initialize(name)
     @name = name.to_sym
     super(name)
@@ -23,21 +21,25 @@ class TestCanvas < Minitest::Test
   [:braille, :dot, :ascii].each do |type|
     define_method(:"test_#{type}") do
       klass = Termlot::Canvas.const_get(type.to_s.capitalize.to_sym)
-      c = klass.new(120, HEIGHT)
+      c = klass.new(120, 30)
       c.points!(@x, @sin, :green).lines!(@x, @cos)
       assert_canvas(c)
     end
   end
 
   def test_enumerator_encapsulation
-    c = Termlot::Canvas::Braille.new(120, HEIGHT)
+    c = Termlot::Canvas::Braille.new(120, 30)
     c.points!(@x, @sin, :green)
     d1 = c.drawer
-    res1 = 5.times.map { d1.next }
+    res1 = 3.times.map { d1.next }
     c.lines!(@x, @cos)
     d2 = c.drawer
     res2 = d2.to_a
-    res1 += (HEIGHT - 5).times.map { d1.next }
+    loop do
+      res1 << d1.next
+    rescue StopIteration
+      break
+    end
     assert_canvas(res1.join("\n") + "\n")
     assert_canvas(res2.join("\n") + "\n", :test_braille)
   end
@@ -60,7 +62,7 @@ class TestCanvas < Minitest::Test
   end
 
   def get_res(canvas_or_res)
-    res = if canvas_or_res.is_a?(String)
+    if canvas_or_res.is_a?(String)
       canvas_or_res
     else
       canvas_or_res.drawer.to_a.join("\n") + "\n"

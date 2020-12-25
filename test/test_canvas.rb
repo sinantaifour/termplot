@@ -7,6 +7,66 @@ class TestCanvas < Minitest::Test
 
   HEIGHT = 30
 
+  def initialize(name)
+    @name = name.to_sym
+    super(name)
+  end
+
+  def setup
+    x = 0.step(3 * Math::PI, by: 3 * Math::PI / 30).to_a
+    # Keep everything in the range of 0 to 1.
+    @sin = x.map { |v| (Math.sin(v) + 1) / 2 }
+    @cos = x.map { |v| (Math.cos(v) + 1) / 2 }
+    @x = x.map { |v| v / (3 * Math::PI) }
+  end
+
+  def assert_canvas(canvas_or_res, name = nil)
+    name ||= @name
+    res = if canvas_or_res.is_a?(String)
+      canvas_or_res
+    else
+      canvas_or_res.drawer.to_a.join("\n") + "\n"
+    end
+    ref = if REFS[name]
+      tmp = Zlib::Inflate.inflate(Base64.decode64(REFS[name]))
+      tmp.force_encoding(Encoding::UTF_8)
+    else
+      nil
+    end
+    if ENV["GENERATE"] && ref != res # Generate new refs instead of testing.
+      puts "\r#{self.class}.#{name}"
+      puts res
+      ref = Base64.encode64(Zlib::Deflate.deflate(res))
+      puts ":#{name} => <<~EOS,"
+      puts ref.split("\n").map { |v| "  #{v}" }
+      puts "EOS"
+    else
+      assert_equal ref, res
+    end
+  end
+
+  [:braille, :dot, :ascii].each do |type|
+    define_method(:"test_#{type}") do
+      klass = Termlot::Canvas.const_get(type.to_s.capitalize.to_sym)
+      c = klass.new(120, HEIGHT)
+      c.points!(@x, @sin, :green).lines!(@x, @cos)
+      assert_canvas(c)
+    end
+  end
+
+  def test_enumerator_encapsulation
+    c = Termlot::Canvas::Braille.new(120, HEIGHT)
+    c.points!(@x, @sin, :green)
+    d1 = c.drawer
+    res1 = 5.times.map { d1.next }
+    c.lines!(@x, @cos)
+    d2 = c.drawer
+    res2 = d2.to_a
+    res1 += (HEIGHT - 5).times.map { d1.next }
+    assert_canvas(res1.join("\n") + "\n")
+    assert_canvas(res2.join("\n") + "\n", :test_braille)
+  end
+
   REFS = {
     :test_braille => <<~EOS,
       eJzVmktuwjAQhve5Apeo2uNwBu5gWtQGFlVTdcGiC9twgLLjPD5JnUcrguww
@@ -54,65 +114,5 @@ class TestCanvas < Minitest::Test
       akRv/Ie0lgJfvIMPV7CIug==
     EOS
   }
-
-  def initialize(name)
-    @name = name.to_sym
-    super(name)
-  end
-
-  def setup
-    x = 0.step(3 * Math::PI, by: 3 * Math::PI / 30).to_a
-    # Keep everything in the range of 0 to 1.
-    @sin = x.map { |v| (Math.sin(v) + 1) / 2 }
-    @cos = x.map { |v| (Math.cos(v) + 1) / 2 }
-    @x = x.map { |v| v / (3 * Math::PI) }
-  end
-
-  def assert_canvas(canvas_or_res, name = nil)
-    name ||= @name
-    res = if canvas_or_res.is_a?(String)
-      canvas_or_res
-    else
-      canvas_or_res.drawer.to_a.join("\n") + "\n"
-    end
-    ref = if REFS[name]
-      tmp = Zlib::Inflate.inflate(Base64.decode64(REFS[name]))
-      tmp.force_encoding(Encoding::UTF_8)
-    else
-      nil
-    end
-    if ENV["GENERATE"] && ref != res # Generate new refs instead of testing.
-      puts "\r#{self.class}.#{name}"
-      puts res
-      ref = Base64.encode64(Zlib::Deflate.deflate(res))
-      puts ":#{name} => <<~EOS,"
-      puts ref.split("\n").map { |v| "  #{v}" }
-      puts "EOS"
-    elsif !ENV["GENERATE"]
-      assert_equal ref, res
-    end
-  end
-
-  [:braille, :dot, :ascii].each do |type|
-    define_method(:"test_#{type}") do
-      klass = Termlot::Canvas.const_get(type.to_s.capitalize.to_sym)
-      c = klass.new(120, HEIGHT)
-      c.points!(@x, @sin, :green).lines!(@x, @cos)
-      assert_canvas(c)
-    end
-  end
-
-  def test_enumerator_encapsulation
-    c = Termlot::Canvas::Braille.new(120, HEIGHT)
-    c.points!(@x, @sin, :green)
-    d1 = c.drawer
-    res1 = 5.times.map { d1.next }
-    c.lines!(@x, @cos)
-    d2 = c.drawer
-    res2 = d2.to_a
-    res1 += (HEIGHT - 5).times.map { d1.next }
-    assert_canvas(res1.join("\n") + "\n")
-    assert_canvas(res2.join("\n") + "\n", :test_braille)
-  end
 
 end

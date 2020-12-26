@@ -10,7 +10,7 @@ with my setup because:
     it blocks further commands in the shell.
   * They have a lot of dependencies.
 * Moving data between my Ruby shell (where I am doing the analysis), and another
-  environment for plotting (e.g. Jupyter notebook with `matplotlib`) is
+  environment for plotting (e.g. a Python Jupyter notebook with `matplotlib`) is
   cumbersome.
 
 `Termlot` solves the issues above by having the plots right in the terminal,
@@ -61,7 +61,8 @@ interactive shell. Here is an example:
 > require 'termlot'
 > include Termlot::Interactive
 > type :dot # By default, Termlot uses braille characters to render, but these
-            # wouldn't render well in the README, so switch to the dot renderer.
+            # wouldn't render well in the README, so switch to the dot renderer
+            # which uses dots, apostrophes, and colons.
 > nocolor # Don't render with colors, we can't show the colors in README anyway.
 > plot([0, 1], [0, 1])
 ┌────────────────────────────────────────────────────────────────────────┐

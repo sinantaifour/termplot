@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
 # This script requires the `convert` binary and `chunky_png` gem to be
-# installed first.
+# installed first. Unfortunately, resizing with ChunkyPNG directly does not
+# yield good enough results.
 
 require 'chunky_png'
 

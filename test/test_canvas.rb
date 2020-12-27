@@ -106,15 +106,15 @@ class TestCanvas < Minitest::Test
       eRyba+IOM7B36kk5vQEQ3haK
     EOS
     :test_ascii => <<~EOS,
-      eJytl0uOwjAMhve5Apsqm5EqSx0xt6DcgFHaC7Dg/puhRX0k+f1IMl5AIba/
-      v3m4tQ9hou6wy+Pn+qTL4/sp/ig0mkLwPoxTI8ktH/NI6f8VioZ5u/SGdO7z
-      9UGz+mqm6CRkF1MIcNtF3zQx1Kf//CoRO7iJnHPVfAe4o2oyjpTJO/i8EoTm
-      qWQvICVR/Kw5xOJW0xbPrEQbScE1ZCm7MJaAy/eCHMGPruB1Be7xEsMQ5Jja
-      y7TEb7upji4dRiG8ofMYG3dGMnBZXbjrLl9WcHezcweLE97UAIw9xXJgEoAT
-      H3mdiJhtiMG6C0VRaFaMZcE4FYsBqRhsIZeUDuDLgPWsZSWLsiPCgO11KE9p
-      fHZlR5uTohVZtdxoZBYMb66em5F5sFD4arhpPgGMydHrCiiiRW+u0eNEksKs
-      fN0MLHa+NxHc0fif3Igsg0G1qX9FjaM1cNLJUC/1ElXtHG3ToEo5i6G2viRK
-      YgC/0X1YO05TY9vS13bkQyD3B4jTHgs=
+      eJytl02SwiAQhfdcwQ2VDRuqnBq3Vg5gzQ2cMhcYNx6As48xkgB5/QPYi5gf
+      6O/56BAYQpi83eJwPX3f/eH6dY8XLr2ITyrDTyEMt3CeOklmPrizL+83KBpd
+      PL0p0pnlZ0GT+losSoSsYioBJp64LmO8K+/8Cj1WcBd5z7V25PNt4A4y4kr5
+      VnBasA75lFW0EBegJOuPRO0BJnsuDR4M7IklJGBwC5nmsuQCXF8LHJfL9wKj
+      IYZdNLWAlMDX/ULVwtrQlI9RlzoleVC+7MB1IyJyrf3TgjXJYhw1jXBRAzBu
+      yX4aVAJw4i2vYatM+U4epZlIlRi5opSgtGKOHy1YQ5aLfgtQ1ARYLv8a7jPf
+      QwnWz0Me2Khax+wIlBTBhToHUD4SDPzq4e7INJj5zy3cMh8DZkb+PaLqL42K
+      wEkhXGhzoMzHgp8r9U9yMzIPBrNNDzclS+BiJ+MfM5eavWvWp5uWuC4XpaRi
+      FiGd8UYrwNYOY3jtOFMsucNsMmJVNYTgzT91JR6t
     EOS
     :test_enumerator_encapsulation => <<~EOS,
       eJztmkEKgzAQRfdeoZco9jg9g3dopYsue4TUo+UkLZiNMi1miOPk58MDIWg0

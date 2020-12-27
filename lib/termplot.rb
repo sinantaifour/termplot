@@ -1,0 +1,10 @@
+require 'terminfo'
+
+require_relative 'termplot/version'
+require_relative 'termplot/utils'
+require_relative 'termplot/canvas/base'
+require_relative 'termplot/canvas/ascii'
+require_relative 'termplot/canvas/braille'
+require_relative 'termplot/canvas/dot'
+require_relative 'termplot/plot'
+require_relative 'termplot/interactive'

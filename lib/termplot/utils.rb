@@ -1,4 +1,4 @@
-module Termlot
+module Termplot
   module Utils
     module Styler
 

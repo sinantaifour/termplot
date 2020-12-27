@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require 'termlot'
+require 'termplot'
 require 'base64'
 require 'zlib'
 
@@ -20,7 +20,7 @@ class TestCanvas < Minitest::Test
 
   [:braille, :dot, :ascii].each do |type|
     define_method(:"test_#{type}") do
-      klass = Termlot::Canvas.const_get(type.to_s.capitalize.to_sym)
+      klass = Termplot::Canvas.const_get(type.to_s.capitalize.to_sym)
       c = klass.new(120, 30)
       c.points!(@x, @sin, :green).lines!(@x, @cos)
       assert_canvas(c)
@@ -28,7 +28,7 @@ class TestCanvas < Minitest::Test
   end
 
   def test_enumerator_encapsulation
-    c = Termlot::Canvas::Braille.new(120, 30)
+    c = Termplot::Canvas::Braille.new(120, 30)
     c.points!(@x, @sin, :green)
     d1 = c.drawer
     res1 = 3.times.map { d1.next }

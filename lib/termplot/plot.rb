@@ -1,4 +1,4 @@
-module Termlot
+module Termplot
   class Plot
 
     MIN = {
@@ -130,7 +130,7 @@ module Termlot
     end
 
     def type=(value)
-      mod = Termlot::Canvas
+      mod = Canvas
       canvases = mod.constants.select { |c| mod.const_get(c) < mod::Base }
       valid = canvases.map { |s| s.to_s.downcase.to_sym }
       raise(ArgumentError, "Invalid value") unless valid.include?(value)

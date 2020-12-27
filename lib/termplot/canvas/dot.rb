@@ -1,4 +1,4 @@
-module Termlot
+module Termplot
   module Canvas
     class Dot < Base
 

@@ -1,4 +1,4 @@
-# Termlot: Make plots in the terminal
+# Termplot: Make plots in the terminal
 
 I often find myself analyzing data in Ruby. Visually representing the data
 helps one find interesting angles and dig in. However, I was never satisfied
@@ -13,7 +13,7 @@ with my setup because:
   environment for plotting (e.g. a Python Jupyter notebook with `matplotlib`) is
   cumbersome.
 
-`Termlot` solves the issues above by having the plots right in the terminal,
+`Termplot` solves the issues above by having the plots right in the terminal,
 and on top of that, provides some other advantages:
 
 * Your workflow is the same whether you are working locally or remotely over
@@ -28,15 +28,15 @@ need something rough to get an idea of what the data is like.
 ## Installation
 
 ```console
-$ gem install termlot
+$ gem install termplot
 ```
 
 ## Usage
 
 ```ruby
-require 'termlot'
+require 'termplot'
 
-plot = Termlot::Plot.new
+plot = Termplot::Plot.new
 x = 0.step(3 * Math::PI, by: 3 * Math::PI / 30).to_a
 sin = x.map { |v| Math.sin(v) }
 cos = x.map { |v| Math.cos(v) }
@@ -54,13 +54,13 @@ This outputs:
 ## Interactive Mode
 
 While using an interactive shell, you might not want all the boiler-plate. You
-can include `Termlot::Interactive` to import functions directly into the
+can include `Termplot::Interactive` to import functions directly into the
 interactive shell. Here is an example:
 
 ```
-> require 'termlot'
-> include Termlot::Interactive
-> type :dot # By default, Termlot uses braille characters to render, but these
+> require 'termplot'
+> include Termplot::Interactive
+> type :dot # By default, Termplot uses braille characters to render, but these
             # wouldn't render well in the README, so switch to the dot renderer
             # which uses dots, apostrophes, and colons.
 > nocolor # Don't render with colors, we can't show the colors in README anyway.

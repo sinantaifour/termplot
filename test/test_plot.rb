@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require 'termlot'
+require 'termplot'
 require 'base64'
 require 'zlib'
 
@@ -14,7 +14,7 @@ class TestPlot < Minitest::Test
     @x = 0.step(3 * Math::PI, by: 3 * Math::PI / 30).to_a
     @sin = @x.map { |v| Math.sin(v) }
     @cos = @x.map { |v| Math.cos(v) }
-    @p = Termlot::Plot.new
+    @p = Termplot::Plot.new
     @p.width = 120
     @p.height = 30
     @p.type = :braille
@@ -68,7 +68,7 @@ class TestPlot < Minitest::Test
       assert_raises(ArgumentError) { @p.send(m, 100.0) }
       assert_raises(ArgumentError) { @p.send(m, 0) }
       assert_raises(ArgumentError) { @p.send(m, -1) }
-      assert_raises(ArgumentError) { @p.send(m, Termlot::Plot::MIN[dim] - 1) }
+      assert_raises(ArgumentError) { @p.send(m, Termplot::Plot::MIN[dim] - 1) }
     end
   end
 

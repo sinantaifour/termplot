@@ -1,10 +1,10 @@
-require_relative 'lib/termlot/version'
+require_relative 'lib/termplot/version'
 
 DIR = File.expand_path(File.dirname(__FILE__))
 
 Gem::Specification.new do |s|
-  s.name        = 'termlot'
-  s.version     = Termlot::VERSION
+  s.name        = 'termplot'
+  s.version     = Termplot::VERSION
   s.date        = '2011-12-18'
   s.authors     = ['Sinan Taifour']
   s.email       = 'sinan@taifour.com'

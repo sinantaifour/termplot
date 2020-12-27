@@ -1,4 +1,4 @@
-module Termlot
+module Termplot
 
   # Using this module helps us maintain state of the interactive session
   # without polluting the namespace that's using it with variables.
@@ -52,7 +52,7 @@ module Termlot
     end
 
     def nocolor
-      Termlot::Utils::Styler.nocolor!
+      Utils::Styler.nocolor!
     end
 
     [

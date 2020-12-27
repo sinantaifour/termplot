@@ -1,12 +1,12 @@
 require 'minitest/autorun'
-require 'termlot'
+require 'termplot'
 require 'base64'
 require 'zlib'
 
 class TestInteractive < Minitest::Test
 
   class Session
-    include Termlot::Interactive
+    include Termplot::Interactive
   end
 
   def setup

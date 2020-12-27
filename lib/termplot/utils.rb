@@ -14,6 +14,8 @@ module Termplot
         grey:    "\033[90m",
       }
 
+      @nocolor = false
+
       def self.nocolor!
         @nocolor = true
       end

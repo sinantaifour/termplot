@@ -43,7 +43,8 @@ cos = x.map { |v| Math.cos(v) }
 
 plot.add(x, sin)
 plot.add(x, cos, 'xg') # The third argument is for style and color, 'x' is to
-                       # create a scatter plot, 'g' is for green.
+                       # draw points not lines, 'g' is for green. This is
+                       # inspired by matplotlib.
 plot.draw
 ```
 
